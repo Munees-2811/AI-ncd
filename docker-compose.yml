@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ncd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ncd_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ncd_shield}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ncd}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # One-off job: generate dataset + train model into the shared volume.
+  trainer:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: sh -c "cd /app/ml && python generate_dataset.py && python train.py"
+    volumes:
+      - models:/app/ml/models
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      trainer:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-ncd}:${POSTGRES_PASSWORD:-ncd_password}@db:5432/${POSTGRES_DB:-ncd_shield}
+      SECRET_KEY: ${SECRET_KEY:-change-me}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+      MODEL_DIR: /app/ml/models
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@ncdshield.ai}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@12345}
+    volumes:
+      - models:/app/ml/models
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  models:

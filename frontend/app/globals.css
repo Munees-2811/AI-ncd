@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply rounded-2xl border border-white/40 bg-white/60 shadow-xl backdrop-blur-xl
+           dark:border-white/10 dark:bg-white/5;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5
+           font-semibold text-white shadow-lg shadow-brand-600/30 transition
+           hover:scale-[1.03] hover:bg-brand-700 active:scale-95 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300
+           px-5 py-2.5 font-semibold transition hover:bg-slate-100
+           dark:border-slate-700 dark:hover:bg-slate-800;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-300 bg-white/80 px-4 py-2.5 outline-none
+           transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30
+           dark:border-slate-700 dark:bg-slate-900/60;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300;
+  }
+}
+
+/* Mesh gradient backdrop */
+.mesh {
+  background-image:
+    radial-gradient(at 20% 20%, rgba(20, 184, 166, 0.25) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(13, 148, 136, 0.18) 0px, transparent 50%),
+    radial-gradient(at 60% 80%, rgba(45, 212, 191, 0.18) 0px, transparent 50%);
+}
