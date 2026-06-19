@@ -64,6 +64,22 @@ AI-ncd/
 
 ---
 
+## 🖥️ Quick Demo — Desktop App (no Docker/Node needed)
+
+For fast local testing and demos, a **Tkinter desktop edition** reuses the same
+ML model and services in a single window:
+
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r backend/requirements.txt
+cd ml && python generate_dataset.py && python train.py && cd ..   # optional (heuristic fallback otherwise)
+python desktop/ncd_shield_desktop.py
+```
+
+See [`desktop/README.md`](desktop/README.md) for details.
+
+---
+
 ## 🚀 Quick Start (Docker)
 
 ```bash
