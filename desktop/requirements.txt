@@ -1,0 +1,13 @@
+# Desktop app extras — OCR medical-report scanning (optional).
+# The core desktop app runs on backend/requirements.txt alone; these add the
+# "Scan Medical Report" feature.
+#
+# For IMAGE scanning you also need the Tesseract engine installed:
+#   Windows: https://github.com/UB-Mannheim/tesseract/wiki
+#   macOS:   brew install tesseract
+#   Linux:   sudo apt install tesseract-ocr
+
+pytesseract==0.3.13
+Pillow==11.0.0
+pdfplumber==0.11.4
+pypdf==5.1.0

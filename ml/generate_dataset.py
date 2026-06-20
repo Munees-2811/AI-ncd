@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 RNG = np.random.default_rng(42)
-N_SAMPLES = 12000
+N_SAMPLES = 30000
 OUT_PATH = os.path.join(os.path.dirname(__file__), "data", "ncd_dataset.csv")
 
 GENDERS = ["male", "female"]
@@ -50,7 +50,8 @@ def generate() -> pd.DataFrame:
     stress_num = pd.Series(stress_level).map({"low": 0, "moderate": 1, "high": 2}).to_numpy()
 
     # ---- Risk scoring (latent) ----------------------------------------------
-    # Normalized contributions, summed into a logit, then thresholded into classes.
+    # Normalized contributions plus clinically-inspired interaction terms,
+    # summed into a logit, then thresholded into risk classes.
     z = (
         0.045 * (age - 40)
         + 0.09 * (bmi - 24)
@@ -63,6 +64,11 @@ def generate() -> pd.DataFrame:
         + 0.25 * np.abs(sleep_hours - 7.5)
         + 0.45 * stress_num
         + 0.7 * family_history
+        # interaction terms — combined risk factors compound the danger
+        + 0.015 * np.maximum(0, age - 50) * smoking            # older smokers
+        + 0.004 * np.maximum(0, bmi - 25) * (blood_sugar - 100)  # obesity × high sugar
+        + 0.010 * smoking * (systolic_bp - 120)                # smoking × high BP
+        + 0.20 * family_history * (bmi > 30)                   # genetics × obesity
         + RNG.normal(0, 1.1, n)
     )
 

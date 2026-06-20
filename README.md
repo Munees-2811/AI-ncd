@@ -137,6 +137,15 @@ Full interactive docs at `/docs` (Swagger) and `/redoc`.
 
 ---
 
+## ☁️ Deployment (Netlify + backend host)
+
+The React (Next.js) frontend deploys to **Netlify**; the FastAPI backend deploys
+to any Python host. They connect via the `NEXT_PUBLIC_API_URL` env var. A
+[`netlify.toml`](netlify.toml) is included. Full steps in
+[`docs/DEPLOY.md`](docs/DEPLOY.md).
+
+---
+
 ## 🧪 Testing
 
 ```bash

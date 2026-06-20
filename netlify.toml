@@ -1,0 +1,17 @@
+# Netlify deployment config for the NCD Shield AI React (Next.js) frontend.
+#
+# In the Netlify UI set an environment variable:
+#   NEXT_PUBLIC_API_URL = https://your-backend-host  (e.g. Render/Railway/Fly)
+# and make sure the backend's FRONTEND_ORIGIN allows your Netlify site URL.
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+
+# Official adapter that builds & serves the Next.js app on Netlify.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NEXT_TELEMETRY_DISABLED = "1"

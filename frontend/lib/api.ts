@@ -1,6 +1,8 @@
 "use client";
 
-const BASE = ""; // requests proxied through Next rewrites to the backend
+// Absolute backend URL. Locally defaults to the FastAPI dev server; in
+// production (e.g. Netlify) set NEXT_PUBLIC_API_URL to your deployed backend.
+const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export type AssessmentInput = {
   age: number;
@@ -66,7 +68,7 @@ export const api = {
 
   login: async (email: string, password: string) => {
     const form = new URLSearchParams({ username: email, password });
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch(`${BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: form,
@@ -97,7 +99,7 @@ export const api = {
       body: JSON.stringify({ message }),
     }),
 
-  reportUrl: (id: number) => `/api/report/${id}`,
+  reportUrl: (id: number) => `${BASE}/api/report/${id}`,
 
   adminStats: () => request<any>("/api/admin/stats"),
 };

@@ -165,11 +165,52 @@ class NCDShieldApp(tk.Tk):
         ttk.Checkbutton(checks, text="Alcohol", variable=self.vars["alcohol"]).pack(side="left", padx=(0, 20))
         ttk.Checkbutton(checks, text="Family History", variable=self.vars["family_history"]).pack(side="left")
         r += 1
-        ttk.Button(card, text="⚡  Run AI Assessment", style="Brand.TButton",
-                   command=self._run_assessment).grid(row=r, column=0, columnspan=4,
-                                                       sticky="ew", pady=(20, 0))
+        btns = ttk.Frame(card, style="Card.TFrame")
+        btns.grid(row=r, column=0, columnspan=4, sticky="ew", pady=(20, 0))
+        ttk.Button(btns, text="📄  Scan Medical Report (OCR)",
+                   command=self._scan_report).pack(side="left", expand=True, fill="x", padx=(0, 8))
+        ttk.Button(btns, text="⚡  Run AI Assessment", style="Brand.TButton",
+                   command=self._run_assessment).pack(side="left", expand=True, fill="x")
         for c in range(4):
             card.columnconfigure(c, weight=1)
+
+    def _scan_report(self) -> None:
+        """Upload a lab report (image/PDF), OCR it, and auto-fill matched fields."""
+        from ocr import OCRUnavailable, scan_report
+
+        path = filedialog.askopenfilename(
+            title="Select a medical / lab report",
+            filetypes=[("Reports", "*.pdf *.png *.jpg *.jpeg *.bmp *.tiff"),
+                       ("PDF", "*.pdf"), ("Images", "*.png *.jpg *.jpeg")])
+        if not path:
+            return
+        try:
+            values = scan_report(path)
+        except OCRUnavailable as exc:
+            messagebox.showwarning("Scan unavailable", str(exc))
+            return
+        except Exception as exc:  # noqa: BLE001
+            messagebox.showerror("Scan failed", f"Could not read the report:\n{exc}")
+            return
+
+        if not values:
+            messagebox.showinfo(
+                "Nothing detected",
+                "No recognisable lab values were found in that report.\n"
+                "You can still fill the form manually.")
+            return
+
+        for field, value in values.items():
+            if field in self.vars:
+                # Integers for whole-number fields, keep as-is otherwise.
+                self.vars[field].set(str(int(value)) if value == int(value) else str(value))
+        self._update_bmi()
+
+        summary = "\n".join(f"  • {f.replace('_', ' ').title()}: {v:g}"
+                            for f, v in values.items())
+        messagebox.showinfo("Report scanned",
+                            f"Auto-filled {len(values)} field(s):\n{summary}\n\n"
+                            "Please review the values before running the assessment.")
 
     def _entry(self, parent, label, key, row, col, readonly=False):
         ttk.Label(parent, text=label, style="Muted.TLabel").grid(

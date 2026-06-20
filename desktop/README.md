@@ -6,11 +6,25 @@ real ML model and services (prediction, recommendations, chatbot, PDF report).
 
 ## Features
 - 14-factor health assessment form with automatic BMI calculation
+- 📄 **Scan Medical Report (OCR)** — upload a lab report (PDF/image) to auto-fill
+  blood sugar, cholesterol, blood pressure, age, height & weight
 - AI risk screening: Low / Moderate / High, with probability bars
 - Explainable result (top contributing factors)
 - Personalized, prioritized recommendations
 - Built-in healthcare chatbot (never diagnoses)
 - Export a professional **PDF report**
+
+## Optional: enable the medical report scanner
+```bash
+pip install -r desktop/requirements.txt
+```
+For **image** scans you also need the Tesseract OCR engine:
+- Windows: <https://github.com/UB-Mannheim/tesseract/wiki>
+- macOS: `brew install tesseract`  ·  Linux: `sudo apt install tesseract-ocr`
+
+Text-based **PDFs** work without Tesseract (handled by `pdfplumber`/`pypdf`).
+If the extras aren't installed, the rest of the app runs fine — the Scan button
+simply explains what's missing.
 
 ## Requirements
 - **Python 3.10+** (Tkinter ships with Python on Windows & macOS;
