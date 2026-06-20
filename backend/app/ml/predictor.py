@@ -157,17 +157,28 @@ class Predictor:
         directions = self._directions(data)
         items: list[dict] = []
         for feat, imp in list(importances.items())[:8]:
-            base = feat.split("__")[-1].split("_")[0] if "__" in feat else feat
             contribution = directions.get(self._root_feature(feat), "neutral")
             items.append(
                 {
                     "feature": feat,
-                    "label": FEATURE_LABELS.get(feat, feat.replace("_", " ").title()),
+                    "label": self._pretty_label(feat),
                     "importance": round(float(imp), 4),
                     "contribution": contribution,
                 }
             )
         return items
+
+    @staticmethod
+    def _pretty_label(feat: str) -> str:
+        """Human-friendly label, including interaction features like 'BMI × Age'."""
+        if feat in FEATURE_LABELS:
+            return FEATURE_LABELS[feat]
+        # Strip the ColumnTransformer prefix (num__ / cat__).
+        name = feat.split("__", 1)[-1]
+        # PolynomialFeatures joins interacting features with a space.
+        parts = name.split(" ")
+        pretty = [FEATURE_LABELS.get(f"num__{p}", p.replace("_", " ").title()) for p in parts]
+        return " × ".join(pretty)
 
     @staticmethod
     def _root_feature(encoded: str) -> str:

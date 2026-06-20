@@ -19,7 +19,7 @@ Heart Disease, and Chronic Kidney Disease — from lifestyle and health data, an
 | **Landing** | Modern glassmorphism UI, hero, features, stats, FAQ, dark mode |
 | **Auth** | Register / Login / Forgot password, JWT, bcrypt password hashing |
 | **Assessment** | 14-factor health form, automatic BMI calculation |
-| **AI Engine** | Multi-model training (RF, XGBoost, LogReg, Decision Tree), best-model auto-select |
+| **AI Engine** | Tuned multi-model training (RF, XGBoost, LogReg, Decision Tree) with cross-validated hyperparameter search, interaction features, class balancing, best-model auto-select |
 | **Explainability** | Per-prediction feature-importance explanation |
 | **Recommendations** | Rule + model driven personalized lifestyle guidance |
 | **Dashboard** | Health score, risk trend, history charts (Recharts) |
