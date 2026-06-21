@@ -5,13 +5,16 @@ demos**. No Docker, Node.js, database, or browser required. It reuses the projec
 real ML model and services (prediction, recommendations, chatbot, PDF report).
 
 ## Features
-- 14-factor health assessment form with automatic BMI calculation
+- Modern healthcare **dashboard UI** with a card-based layout
+- 14-factor health assessment form with automatic BMI calculation and clean
+  inline validation (invalid fields are highlighted with a clear message)
 - 📄 **Scan Medical Report (OCR)** — upload a lab report (PDF/image) to auto-fill
   blood sugar, cholesterol, blood pressure, age, height & weight
-- AI risk screening: Low / Moderate / High, with probability bars
-- Explainable result (top contributing factors)
-- Personalized, prioritized recommendations
-- Built-in healthcare chatbot (never diagnoses)
+- AI risk screening: overall NCD risk with a Low/Moderate/High probability breakdown
+- **Disease-wise risk cards** — per-condition risk for Diabetes, Hypertension,
+  Heart Disease, and Kidney Disease, each with its own probability bar
+- Explainable result (top contributing factors) + personalized recommendations
+- Built-in **Health Assistant** chat tab (never diagnoses)
 - Export a professional **PDF report**
 
 ## Optional: enable the medical report scanner
