@@ -31,12 +31,14 @@ export default function LoginPage() {
   return (
     <div className="mesh flex min-h-screen items-center justify-center px-4">
       <div className="glass w-full max-w-md p-8">
-        <Link href="/" className="mb-6 flex items-center justify-center gap-2 font-bold">
-          <Shield className="h-8 w-8 text-brand-600" />
-          <span className="text-xl">NCD Shield AI</span>
+        <Link href="/" className="mb-6 flex items-center justify-center gap-2.5 font-semibold">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white shadow-glow">
+            <Shield className="h-5 w-5" />
+          </span>
+          <span className="text-xl tracking-tight">NCD Shield AI</span>
         </Link>
-        <h1 className="text-center text-2xl font-bold">Welcome back</h1>
-        <p className="mt-1 text-center text-sm text-slate-500">Log in to your dashboard</p>
+        <h1 className="text-center text-2xl font-bold tracking-tight">Welcome back</h1>
+        <p className="mt-1.5 text-center text-sm text-ink-500">Log in to your dashboard</p>
 
         {error && (
           <div className="mt-4 rounded-xl bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20">
@@ -60,15 +62,15 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-4 flex justify-between text-sm">
-          <Link href="/forgot-password" className="text-brand-600 hover:underline">
+        <div className="mt-5 flex justify-between text-sm">
+          <Link href="/forgot-password" className="font-medium text-brand-600 hover:underline dark:text-brand-300">
             Forgot password?
           </Link>
-          <Link href="/register" className="text-brand-600 hover:underline">
+          <Link href="/register" className="font-medium text-brand-600 hover:underline dark:text-brand-300">
             Create account
           </Link>
         </div>
-        <p className="mt-6 text-center text-xs text-slate-400">
+        <p className="mt-6 rounded-lg border border-ink-200/70 bg-ink-100/40 px-3 py-2 text-center text-xs text-ink-400 dark:border-white/[0.06] dark:bg-white/[0.02]">
           Demo admin: admin@ncdshield.ai / Admin@12345
         </p>
       </div>

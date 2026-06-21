@@ -37,9 +37,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="mesh min-h-screen">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
         <aside className="glass sticky top-6 hidden h-[calc(100vh-3rem)] w-60 flex-col p-4 md:flex">
-          <Link href="/" className="mb-8 flex items-center gap-2 px-2 font-bold">
-            <Shield className="h-7 w-7 text-brand-600" />
-            <span>NCD Shield AI</span>
+          <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-semibold">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white shadow-glow">
+              <Shield className="h-[18px] w-[18px]" />
+            </span>
+            <span className="tracking-tight">NCD Shield AI</span>
           </Link>
           <nav className="flex-1 space-y-1">
             {nav.map((n) => (
@@ -49,11 +51,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
                   pathname === n.href
-                    ? "bg-brand-600 text-white shadow-lg shadow-brand-600/30"
-                    : "hover:bg-slate-100 dark:hover:bg-slate-800"
+                    ? "bg-brand-600 text-white shadow-glow"
+                    : "text-ink-500 hover:bg-ink-100/70 hover:text-ink-900 dark:text-ink-300 dark:hover:bg-white/[0.05] dark:hover:text-white"
                 )}
               >
-                <n.icon className="h-5 w-5" />
+                <n.icon className="h-[18px] w-[18px]" />
                 {n.label}
               </Link>
             ))}

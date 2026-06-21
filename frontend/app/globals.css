@@ -3,44 +3,129 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Sora", var(--font-sans);
+  --paper: #fbfbfd;
+  --ink: #12131a;
 }
 
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
   body {
-    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-[#fbfbfd] text-ink-900 antialiased dark:bg-ink-950 dark:text-ink-100;
+    font-feature-settings: "ss01", "cv01", "cv03";
+  }
+  /* Premium display typography on headings, automatically. */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+  ::selection {
+    @apply bg-brand-500/25;
+  }
+  /* Refined thin scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120, 120, 140, 0.35) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 140, 0.3);
+    border-radius: 999px;
   }
 }
 
 @layer components {
+  /* Premium surface — subtle border, layered soft shadow, faint translucency. */
   .glass {
-    @apply rounded-2xl border border-white/40 bg-white/60 shadow-xl backdrop-blur-xl
-           dark:border-white/10 dark:bg-white/5;
+    @apply rounded-2xl border border-ink-200/70 bg-white/80 shadow-card backdrop-blur-xl
+           dark:border-white/[0.07] dark:bg-white/[0.035];
   }
+  /* Interactive cards lift gently on hover. */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-lg;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5
-           font-semibold text-white shadow-lg shadow-brand-600/30 transition
-           hover:scale-[1.03] hover:bg-brand-700 active:scale-95 disabled:opacity-50;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl
+           bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-glow
+           transition-all duration-200 hover:bg-brand-500 hover:shadow-[0_14px_44px_-12px_rgba(108,92,240,0.7)]
+           active:translate-y-px disabled:pointer-events-none disabled:opacity-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50
+           focus-visible:ring-offset-2 focus-visible:ring-offset-[#fbfbfd]
+           dark:focus-visible:ring-offset-ink-950;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300
-           px-5 py-2.5 font-semibold transition hover:bg-slate-100
-           dark:border-slate-700 dark:hover:bg-slate-800;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-ink-200
+           bg-white/60 px-5 py-2.5 text-sm font-semibold text-ink-800 transition-all
+           duration-200 hover:border-ink-300 hover:bg-white
+           dark:border-white/10 dark:bg-white/[0.02] dark:text-ink-100 dark:hover:bg-white/[0.06];
   }
   .input {
-    @apply w-full rounded-xl border border-slate-300 bg-white/80 px-4 py-2.5 outline-none
-           transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30
-           dark:border-slate-700 dark:bg-slate-900/60;
+    @apply w-full rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-sm text-ink-900
+           outline-none transition placeholder:text-ink-400
+           focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10
+           dark:border-white/10 dark:bg-white/[0.03] dark:text-ink-50 dark:focus:border-brand-500;
   }
   .label {
-    @apply mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300;
+    @apply mb-1.5 block text-[13px] font-medium text-ink-500 dark:text-ink-300;
+  }
+  /* Small status pill. */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink-200/80 bg-white/70
+           px-3 py-1 text-xs font-medium text-ink-600
+           dark:border-white/10 dark:bg-white/[0.04] dark:text-ink-300;
+  }
+  /* Hairline divider that adapts to theme. */
+  .hairline {
+    @apply border-ink-200/70 dark:border-white/[0.07];
   }
 }
 
-/* Mesh gradient backdrop */
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-br from-ink-900 via-ink-900 to-brand-600 bg-clip-text text-transparent
+           dark:from-white dark:via-white dark:to-brand-300;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Sophisticated ambient backdrop — soft iris glows + a faint grid.
+   (Replaces the previous teal "mesh".) */
 .mesh {
+  position: relative;
+  background-color: #fbfbfd;
   background-image:
-    radial-gradient(at 20% 20%, rgba(20, 184, 166, 0.25) 0px, transparent 50%),
-    radial-gradient(at 80% 10%, rgba(13, 148, 136, 0.18) 0px, transparent 50%),
-    radial-gradient(at 60% 80%, rgba(45, 212, 191, 0.18) 0px, transparent 50%);
+    radial-gradient(45rem 45rem at 100% -10%, rgba(108, 92, 240, 0.10), transparent 60%),
+    radial-gradient(40rem 40rem at -10% 0%, rgba(108, 92, 240, 0.06), transparent 55%);
+}
+.mesh::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(18, 19, 26, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(18, 19, 26, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(60% 60% at 50% 30%, black, transparent 75%);
+}
+.dark .mesh {
+  background-color: #0c0c12;
+  background-image:
+    radial-gradient(45rem 45rem at 100% -10%, rgba(108, 92, 240, 0.18), transparent 60%),
+    radial-gradient(40rem 40rem at -10% 0%, rgba(80, 70, 200, 0.12), transparent 55%);
+}
+.dark .mesh::before {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
 }

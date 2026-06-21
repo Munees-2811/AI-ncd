@@ -23,9 +23,9 @@ import { api } from "@/lib/api";
 import { riskColor } from "@/lib/utils";
 
 const RISK_PALETTE: Record<string, string> = {
-  "Low Risk": "#16a34a",
-  "Moderate Risk": "#d97706",
-  "High Risk": "#dc2626",
+  "Low Risk": "#059669",
+  "Moderate Risk": "#f59e0b",
+  "High Risk": "#f43f5e",
 };
 
 export default function DashboardPage() {
@@ -65,10 +65,10 @@ export default function DashboardPage() {
     <DashboardShell>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold md:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight md:text-[1.9rem]">
             Welcome{profile?.user ? `, ${profile.user.full_name.split(" ")[0]}` : ""} 👋
           </h1>
-          <p className="mt-1 text-sm text-slate-500">Your health overview at a glance.</p>
+          <p className="mt-1 text-sm text-ink-500">Your health overview at a glance.</p>
         </div>
         <Link href="/assess" className="btn-primary">
           <ClipboardPlus className="h-4 w-4" /> New Assessment
@@ -76,12 +76,14 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <p className="mt-10 text-slate-500">Loading…</p>
+        <p className="mt-10 text-ink-500">Loading…</p>
       ) : history.length === 0 ? (
-        <div className="glass mt-8 p-10 text-center">
-          <HeartPulse className="mx-auto h-12 w-12 text-brand-600" />
-          <h2 className="mt-4 text-xl font-semibold">No assessments yet</h2>
-          <p className="mt-2 text-sm text-slate-500">
+        <div className="glass mt-8 p-12 text-center">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-200/70 bg-brand-50 text-brand-600 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300">
+            <HeartPulse className="h-7 w-7" />
+          </span>
+          <h2 className="mt-5 text-xl font-semibold">No assessments yet</h2>
+          <p className="mt-2 text-sm text-ink-500">
             Run your first AI health assessment to see your risk insights here.
           </p>
           <Link href="/assess" className="btn-primary mt-6">Start Assessment</Link>
@@ -107,20 +109,20 @@ export default function DashboardPage() {
                 <AreaChart data={trend}>
                   <defs>
                     <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.6} />
-                      <stop offset="95%" stopColor="#14b8a6" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#6c5cf0" stopOpacity={0.55} />
+                      <stop offset="95%" stopColor="#6c5cf0" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#dc2626" stopOpacity={0.5} />
-                      <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                  <XAxis dataKey="name" fontSize={12} />
-                  <YAxis domain={[0, 100]} fontSize={12} />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="health" stroke="#14b8a6" fill="url(#g1)" />
-                  <Area type="monotone" dataKey="risk" stroke="#dc2626" fill="url(#g2)" />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                  <XAxis dataKey="name" fontSize={12} stroke="#9494a6" />
+                  <YAxis domain={[0, 100]} fontSize={12} stroke="#9494a6" />
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid rgba(120,120,140,0.2)", fontSize: 12 }} />
+                  <Area type="monotone" dataKey="health" stroke="#6c5cf0" strokeWidth={2} fill="url(#g1)" />
+                  <Area type="monotone" dataKey="risk" stroke="#f43f5e" strokeWidth={2} fill="url(#g2)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -144,11 +146,11 @@ export default function DashboardPage() {
               <h3 className="mb-4 font-semibold">BMI History</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={bmiData}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                  <XAxis dataKey="name" fontSize={12} />
-                  <YAxis fontSize={12} />
-                  <Tooltip />
-                  <Bar dataKey="bmi" fill="#0d9488" radius={[6, 6, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                  <XAxis dataKey="name" fontSize={12} stroke="#9494a6" />
+                  <YAxis fontSize={12} stroke="#9494a6" />
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid rgba(120,120,140,0.2)", fontSize: 12 }} cursor={{ fill: "rgba(108,92,240,0.06)" }} />
+                  <Bar dataKey="bmi" fill="#6c5cf0" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -159,26 +161,26 @@ export default function DashboardPage() {
             <h3 className="mb-4 font-semibold">Previous Assessments</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="text-left text-slate-500">
+                <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
                   <tr>
-                    <th className="py-2">Date</th>
-                    <th>Risk</th>
-                    <th>Score</th>
-                    <th>Health</th>
-                    <th>BMI</th>
-                    <th>Report</th>
+                    <th className="pb-3 font-medium">Date</th>
+                    <th className="font-medium">Risk</th>
+                    <th className="font-medium">Score</th>
+                    <th className="font-medium">Health</th>
+                    <th className="font-medium">BMI</th>
+                    <th className="font-medium">Report</th>
                   </tr>
                 </thead>
                 <tbody>
                   {history.map((h) => (
-                    <tr key={h.id} className="border-t border-slate-200 dark:border-slate-700">
-                      <td className="py-2">{new Date(h.created_at).toLocaleDateString()}</td>
-                      <td className={riskColor(h.risk_level)}>{h.risk_level}</td>
-                      <td>{h.risk_score}%</td>
-                      <td>{h.health_score}</td>
-                      <td>{h.bmi}</td>
+                    <tr key={h.id} className="hairline border-t transition hover:bg-ink-100/40 dark:hover:bg-white/[0.02]">
+                      <td className="py-3 text-ink-600 dark:text-ink-300">{new Date(h.created_at).toLocaleDateString()}</td>
+                      <td className={`font-medium ${riskColor(h.risk_level)}`}>{h.risk_level}</td>
+                      <td className="tabular-nums">{h.risk_score}%</td>
+                      <td className="tabular-nums">{h.health_score}</td>
+                      <td className="tabular-nums">{h.bmi}</td>
                       <td>
-                        <a className="text-brand-600 hover:underline" target="_blank"
+                        <a className="font-medium text-brand-600 hover:underline dark:text-brand-300" target="_blank"
                           rel="noreferrer" href={api.reportUrl(h.id)}>
                           PDF
                         </a>
@@ -199,14 +201,16 @@ export default function DashboardPage() {
 
 function SummaryCard({ icon: Icon, label, value, sub, valueClass }: any) {
   return (
-    <div className="glass p-5">
+    <div className="glass card-hover p-5">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-slate-500">{label}</span>
-        <Icon className="h-5 w-5 text-brand-600" />
+        <span className="text-[13px] font-medium text-ink-500">{label}</span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand-200/60 bg-brand-50 text-brand-600 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300">
+          <Icon className="h-4 w-4" />
+        </span>
       </div>
-      <div className={`mt-2 text-2xl font-extrabold ${valueClass || ""}`}>
+      <div className={`mt-3 font-display text-2xl font-bold tracking-tight ${valueClass || ""}`}>
         {value}
-        {sub && <span className="text-sm font-normal text-slate-400"> {sub}</span>}
+        {sub && <span className="text-sm font-normal text-ink-400"> {sub}</span>}
       </div>
     </div>
   );

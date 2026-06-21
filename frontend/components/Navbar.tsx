@@ -9,16 +9,18 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 export function Navbar() {
   const { t } = useI18n();
   return (
-    <header className="sticky top-0 z-40 border-b border-white/30 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <Shield className="h-7 w-7 text-brand-600" />
-          <span className="text-lg">NCD Shield AI</span>
+    <header className="sticky top-0 z-40 border-b border-ink-200/60 bg-white/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-ink-950/70">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5">
+        <Link href="/" className="group flex items-center gap-2.5 font-semibold">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white shadow-glow transition group-hover:scale-105">
+            <Shield className="h-5 w-5" />
+          </span>
+          <span className="text-[17px] tracking-tight">NCD Shield AI</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link href="/#features" className="hover:text-brand-600">{t("nav.features")}</Link>
-          <Link href="/#about" className="hover:text-brand-600">{t("nav.about")}</Link>
-          <Link href="/#faq" className="hover:text-brand-600">{t("nav.faq")}</Link>
+        <nav className="hidden items-center gap-8 text-sm font-medium text-ink-500 dark:text-ink-300 md:flex">
+          <Link href="/#features" className="transition hover:text-ink-900 dark:hover:text-white">{t("nav.features")}</Link>
+          <Link href="/#about" className="transition hover:text-ink-900 dark:hover:text-white">{t("nav.about")}</Link>
+          <Link href="/#faq" className="transition hover:text-ink-900 dark:hover:text-white">{t("nav.faq")}</Link>
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

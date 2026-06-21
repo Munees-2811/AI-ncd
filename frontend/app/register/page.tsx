@@ -36,12 +36,14 @@ export default function RegisterPage() {
   return (
     <div className="mesh flex min-h-screen items-center justify-center px-4 py-10">
       <div className="glass w-full max-w-md p-8">
-        <Link href="/" className="mb-6 flex items-center justify-center gap-2 font-bold">
-          <Shield className="h-8 w-8 text-brand-600" />
-          <span className="text-xl">NCD Shield AI</span>
+        <Link href="/" className="mb-6 flex items-center justify-center gap-2.5 font-semibold">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white shadow-glow">
+            <Shield className="h-5 w-5" />
+          </span>
+          <span className="text-xl tracking-tight">NCD Shield AI</span>
         </Link>
-        <h1 className="text-center text-2xl font-bold">Create your account</h1>
-        <p className="mt-1 text-center text-sm text-slate-500">Start your free health assessment</p>
+        <h1 className="text-center text-2xl font-bold tracking-tight">Create your account</h1>
+        <p className="mt-1.5 text-center text-sm text-ink-500">Start your free health assessment</p>
 
         {error && (
           <div className="mt-4 rounded-xl bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20">
@@ -70,9 +72,9 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm">
+        <p className="mt-5 text-center text-sm text-ink-500">
           Already have an account?{" "}
-          <Link href="/login" className="text-brand-600 hover:underline">Login</Link>
+          <Link href="/login" className="font-medium text-brand-600 hover:underline dark:text-brand-300">Login</Link>
         </p>
       </div>
     </div>

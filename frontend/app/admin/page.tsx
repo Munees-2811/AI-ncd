@@ -28,11 +28,11 @@ export default function AdminPage() {
 
   return (
     <DashboardShell>
-      <h1 className="text-2xl font-bold md:text-3xl">Admin Panel</h1>
-      <p className="mt-1 text-sm text-slate-500">System analytics & model performance.</p>
+      <h1 className="text-2xl font-bold tracking-tight md:text-[1.9rem]">Admin Panel</h1>
+      <p className="mt-1 text-sm text-ink-500">System analytics & model performance.</p>
 
       {error && (
-        <div className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-900/20">
+        <div className="mt-6 rounded-xl border border-rose-200/60 bg-rose-50 px-4 py-3 text-sm text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300">
           {error} — admin access required. Log in with the admin account.
         </div>
       )}
@@ -55,11 +55,11 @@ export default function AdminPage() {
               <h3 className="mb-4 font-semibold">Risk Distribution</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={dist}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                  <XAxis dataKey="name" fontSize={12} />
-                  <YAxis fontSize={12} allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#0d9488" radius={[6, 6, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                  <XAxis dataKey="name" fontSize={12} stroke="#9494a6" />
+                  <YAxis fontSize={12} allowDecimals={false} stroke="#9494a6" />
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid rgba(120,120,140,0.2)", fontSize: 12 }} cursor={{ fill: "rgba(108,92,240,0.06)" }} />
+                  <Bar dataKey="value" fill="#6c5cf0" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -83,21 +83,23 @@ export default function AdminPage() {
 
 function Card({ icon: Icon, label, value }: any) {
   return (
-    <div className="glass p-5">
+    <div className="glass card-hover p-5">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-slate-500">{label}</span>
-        <Icon className="h-5 w-5 text-brand-600" />
+        <span className="text-[13px] font-medium text-ink-500">{label}</span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand-200/60 bg-brand-50 text-brand-600 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300">
+          <Icon className="h-4 w-4" />
+        </span>
       </div>
-      <div className="mt-2 text-2xl font-extrabold capitalize">{value}</div>
+      <div className="mt-3 font-display text-2xl font-bold capitalize tracking-tight">{value}</div>
     </div>
   );
 }
 
 function Row({ label, value }: { label: string; value: any }) {
   return (
-    <div className="flex justify-between border-b border-slate-200 pb-2 dark:border-slate-700">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="font-semibold capitalize">{String(value)}</dd>
+    <div className="hairline flex justify-between border-b pb-2.5 last:border-0">
+      <dt className="text-ink-500">{label}</dt>
+      <dd className="font-semibold capitalize tabular-nums">{String(value)}</dd>
     </div>
   );
 }

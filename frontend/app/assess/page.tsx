@@ -58,8 +58,8 @@ export default function AssessPage() {
 
   return (
     <DashboardShell>
-      <h1 className="text-2xl font-bold md:text-3xl">Health Assessment</h1>
-      <p className="mt-1 text-sm text-slate-500">
+      <h1 className="text-2xl font-bold tracking-tight md:text-[1.9rem]">Health Assessment</h1>
+      <p className="mt-1 text-sm text-ink-500">
         Fill in your details for an AI-powered NCD risk screening. BMI is calculated automatically.
       </p>
 
@@ -75,40 +75,40 @@ export default function AssessPage() {
               <div className="mt-2 flex justify-around text-center text-sm">
                 <div>
                   <div className="font-bold">{result.health_score}</div>
-                  <div className="text-slate-500">Health Score</div>
+                  <div className="text-xs text-ink-500">Health Score</div>
                 </div>
                 <div>
                   <div className="font-bold">{result.bmi}</div>
-                  <div className="text-slate-500">BMI</div>
+                  <div className="text-xs text-ink-500">BMI</div>
                 </div>
                 <div>
                   <div className={`font-bold ${riskColor(result.risk_level)}`}>
                     {result.risk_level}
                   </div>
-                  <div className="text-slate-500">Risk</div>
+                  <div className="text-xs text-ink-500">Risk</div>
                 </div>
               </div>
             </div>
             <div>
               <h3 className="font-semibold">Why this result?</h3>
-              <ul className="mt-2 space-y-1.5 text-sm">
+              <ul className="mt-3 space-y-2 text-sm">
                 {result.explanation.slice(0, 5).map((e) => (
                   <li key={e.feature} className="flex items-center justify-between gap-2">
-                    <span>{e.label}</span>
+                    <span className="text-ink-600 dark:text-ink-200">{e.label}</span>
                     <span className="flex items-center gap-2">
-                      <span className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                      <span className="h-1.5 w-20 overflow-hidden rounded-full bg-ink-200 dark:bg-white/10">
                         <span
-                          className="block h-full bg-brand-500"
+                          className="block h-full rounded-full bg-brand-500"
                           style={{ width: `${Math.min(100, e.importance * 300)}%` }}
                         />
                       </span>
                       <span
                         className={
                           e.contribution === "increases"
-                            ? "text-red-500"
+                            ? "text-rose-500"
                             : e.contribution === "decreases"
                             ? "text-emerald-500"
-                            : "text-slate-400"
+                            : "text-ink-400"
                         }
                       >
                         {e.contribution === "increases" ? "↑" : e.contribution === "decreases" ? "↓" : "•"}
@@ -131,26 +131,26 @@ export default function AssessPage() {
           <h3 className="mt-6 font-semibold">Personalized recommendations</h3>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {result.recommendations.map((r, i) => (
-              <div key={i} className="rounded-xl border border-slate-200 p-3 dark:border-slate-700">
-                <div className="flex items-center justify-between">
+              <div key={i} className="rounded-xl border border-ink-200/70 bg-white/40 p-3.5 transition hover:border-brand-300/50 dark:border-white/[0.06] dark:bg-white/[0.02]">
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-semibold">{r.title}</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                       r.priority === "high"
-                        ? "bg-red-100 text-red-600 dark:bg-red-900/30"
+                        ? "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300"
                         : r.priority === "medium"
-                        ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30"
-                        : "bg-slate-100 text-slate-500 dark:bg-slate-800"
+                        ? "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300"
+                        : "bg-ink-100 text-ink-500 dark:bg-white/[0.06] dark:text-ink-300"
                     }`}
                   >
                     {r.priority}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-slate-500">{r.detail}</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-ink-500">{r.detail}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-slate-400">⚠️ {result.disclaimer}</p>
+          <p className="mt-5 text-xs text-ink-400">⚠️ {result.disclaimer}</p>
         </motion.div>
       )}
 
@@ -175,7 +175,7 @@ export default function AssessPage() {
         </div>
         <div>
           <label className="label">BMI (auto)</label>
-          <input className="input bg-slate-100 dark:bg-slate-800" value={bmi} readOnly />
+          <input className="input bg-ink-100/60 font-medium dark:bg-white/[0.04]" value={bmi} readOnly />
         </div>
         <div>
           <label className="label">Height (cm)</label>
