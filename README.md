@@ -23,6 +23,7 @@ Heart Disease, and Chronic Kidney Disease — from lifestyle and health data, an
 | **Explainability** | Per-prediction feature-importance explanation |
 | **Recommendations** | Rule + model driven personalized lifestyle guidance |
 | **Dashboard** | Health score, risk trend, history charts (Recharts) |
+| **Report Comparison** | Diff latest vs previous report — per-metric improvement/downfall |
 | **Reports** | Professional PDF report generation |
 | **Chatbot** | Healthcare assistant (never diagnoses) |
 | **Admin** | Users, predictions, analytics, model accuracy, system logs |

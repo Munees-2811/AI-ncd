@@ -13,6 +13,8 @@ real ML model and services (prediction, recommendations, chatbot, PDF report).
 - AI risk screening: overall NCD risk with a Low/Moderate/High probability breakdown
 - **Disease-wise risk cards** — per-condition risk for Diabetes, Hypertension,
   Heart Disease, and Kidney Disease, each with its own probability bar
+- **Report comparison** — diffs your current vs previous assessment (this session)
+  and flags each metric as an improvement or a downfall
 - Explainable result (top contributing factors) + personalized recommendations
 - Built-in **Health Assistant** chat tab (never diagnoses)
 - Export a professional **PDF report**

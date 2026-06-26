@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.join(ROOT, "backend"))
 
 from app.ml.predictor import DISCLAIMER, predictor  # noqa: E402
 from app.services.chatbot import get_reply  # noqa: E402
+from app.services.comparison import compare_reports  # noqa: E402
 from app.services.pdf_report import build_report  # noqa: E402
 from app.services.recommendations import generate_recommendations  # noqa: E402
 
@@ -214,6 +215,8 @@ class NCDShieldApp(tk.Tk):
 
         self.last_prediction: dict | None = None
         self.last_inputs: dict | None = None
+        self.last_comparison: dict | None = None
+        self._prev_report: dict | None = None  # previous assessment this session
         self.entries: dict[str, tk.Entry] = {}
 
         self._init_style()
@@ -438,6 +441,16 @@ class NCDShieldApp(tk.Tk):
         result["recommendations"] = generate_recommendations(data, result["risk_class"])
         result["diseases"] = compute_disease_risks(data)
 
+        # Report comparison vs the previous assessment in this session.
+        current_report = {
+            "risk_level": result["risk_level"], "risk_score": result["risk_score"],
+            "health_score": result["health_score"], "bmi": data["bmi"], "inputs": data,
+        }
+        self.last_comparison = (
+            compare_reports(current_report, self._prev_report) if self._prev_report else None
+        )
+        self._prev_report = current_report
+
         self.last_inputs = data
         self.last_prediction = result
         self._render_result(data, result)
@@ -462,6 +475,8 @@ class NCDShieldApp(tk.Tk):
         body.pack(fill="both", expand=True, padx=8, pady=8)
 
         self._render_overall_card(body, data, result)
+        if self.last_comparison and self.last_comparison.get("available"):
+            self._render_comparison_card(body, self.last_comparison)
         self._render_disease_section(body, result["diseases"])
         self._render_explanation_card(body, result)
         self._render_recommendations_card(body, result["recommendations"])
@@ -517,6 +532,51 @@ class NCDShieldApp(tk.Tk):
             progress_bar(bar_wrap, pct, RISK[lv][0]).pack(fill="x")
             tk.Label(row, text=f"{pct:.0f}%", bg=CARD, fg=INK, width=5, anchor="e",
                      font=(FONT, 9, "bold")).pack(side="left")
+
+    def _render_comparison_card(self, parent, cmp):
+        wrap, inner = make_card(parent)
+        wrap.pack(fill="x", pady=6)
+        verdict = cmp.get("verdict", "unchanged")
+        level = {"improved": "Low", "declined": "High", "unchanged": "Moderate"}[verdict]
+        fg, soft = RISK[level]
+        arrow = {"improved": "▲", "declined": "▼", "unchanged": "■"}[verdict]
+
+        head = tk.Frame(inner, bg=CARD)
+        head.pack(fill="x")
+        tk.Label(head, text="Report Comparison", bg=CARD, fg=INK,
+                 font=(FONT, 12, "bold")).pack(side="left")
+        chip = tk.Label(head, text=f"  {arrow} {verdict.capitalize()}  ", bg=soft, fg=fg,
+                        font=(FONT, 9, "bold"))
+        chip.pack(side="right")
+        tk.Label(inner, text="Compared with your previous assessment this session.",
+                 bg=CARD, fg=MUTED, font=(FONT, 9)).pack(anchor="w", pady=(1, 6))
+
+        tk.Label(inner, text=cmp.get("summary", ""), bg=SOFT, fg=INK, font=(FONT, 9),
+                 anchor="w", padx=12, pady=8, justify="left", wraplength=880,
+                 highlightbackground=BORDER, highlightthickness=1).pack(fill="x")
+
+        grid = tk.Frame(inner, bg=CARD)
+        grid.pack(fill="x", pady=(10, 0))
+        for c in range(3):
+            grid.columnconfigure(c, weight=1, uniform="m")
+        for i, m in enumerate(cmp.get("metrics", [])):
+            color = "#0f9d6b" if m["better"] is True else "#e11d48" if m["better"] is False else MUTED
+            ar = "↑" if m["direction"] == "up" else "↓" if m["direction"] == "down" else "→"
+            cell = tk.Frame(grid, bg=SOFT, highlightbackground=BORDER, highlightthickness=1)
+            cell.grid(row=i // 3, column=i % 3, sticky="ew", padx=4, pady=4)
+            ci = tk.Frame(cell, bg=SOFT)
+            ci.pack(fill="x", padx=10, pady=7)
+            top = tk.Frame(ci, bg=SOFT)
+            top.pack(fill="x")
+            tk.Label(top, text=m["label"], bg=SOFT, fg=MUTED, font=(FONT, 8, "bold"),
+                     anchor="w").pack(side="left")
+            sign = "+" if m["delta"] > 0 else ""
+            tk.Label(top, text=f"{ar} {sign}{m['delta']:g}{m['unit']}", bg=SOFT, fg=color,
+                     font=(FONT, 8, "bold")).pack(side="right")
+            tk.Label(ci, text=f"{m['current']:g}  ", bg=SOFT, fg=INK,
+                     font=(FONT, 13, "bold")).pack(side="left", pady=(2, 0))
+            tk.Label(ci, text=f"from {m['previous']:g}{m['unit']}", bg=SOFT, fg=FAINT,
+                     font=(FONT, 8)).pack(side="left", pady=(2, 0))
 
     def _render_disease_section(self, parent, diseases):
         tk.Label(parent, text="Disease-wise risk breakdown", bg=BG, fg=INK,

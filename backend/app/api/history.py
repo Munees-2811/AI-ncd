@@ -7,6 +7,7 @@ from app.core.deps import get_current_user
 from app.database import get_db
 from app.models import Prediction, User
 from app.schemas.prediction import PredictionHistoryItem, PredictionResult
+from app.services.comparison import compare_reports
 
 router = APIRouter(prefix="/api/history", tags=["history"])
 
@@ -25,6 +26,39 @@ def list_history(
         .all()
     )
     return preds
+
+
+def _to_dict(pred: Prediction) -> dict:
+    return {
+        "id": pred.id,
+        "created_at": pred.created_at,
+        "risk_level": pred.risk_level,
+        "risk_score": pred.risk_score,
+        "health_score": pred.health_score,
+        "bmi": pred.bmi,
+        "inputs": pred.inputs,
+    }
+
+
+@router.get("/compare")
+def compare_latest(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Compare the two most recent assessments and flag improvement/downfall."""
+    preds = (
+        db.query(Prediction)
+        .filter(Prediction.user_id == user.id)
+        .order_by(Prediction.created_at.desc())
+        .limit(2)
+        .all()
+    )
+    if len(preds) < 2:
+        return {
+            "available": False,
+            "message": "Take at least two assessments to compare your reports.",
+        }
+    return compare_reports(_to_dict(preds[0]), _to_dict(preds[1]))
 
 
 @router.get("/{prediction_id}", response_model=PredictionResult)

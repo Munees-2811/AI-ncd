@@ -73,7 +73,26 @@ username=jane@example.com&password=Password123
 ## History — `/api/history`  *(auth)*
 
 - `GET /api/history?limit=50` → list of past predictions (summary)
+- `GET /api/history/compare` → compare the two most recent assessments
 - `GET /api/history/{id}` → full prediction detail
+
+### `GET /api/history/compare`
+Returns `{ "available": false, ... }` when fewer than two assessments exist,
+otherwise a direction-aware diff:
+```json
+{
+  "available": true,
+  "verdict": "improved",
+  "summary": "Your health score improved by 12.3 points since your last assessment.",
+  "improved_count": 5, "worsened_count": 1,
+  "current":  { "id": 9, "risk_level": "Moderate Risk", "health_score": 62.0, "bmi": 27.0 },
+  "previous": { "id": 7, "risk_level": "High Risk", "health_score": 49.7, "bmi": 29.0 },
+  "metrics": [
+    { "key": "health_score", "label": "Health Score", "unit": "/100",
+      "current": 62.0, "previous": 49.7, "delta": 12.3, "direction": "up", "better": true }
+  ]
+}
+```
 
 ## Report — `/api/report`  *(auth)*
 

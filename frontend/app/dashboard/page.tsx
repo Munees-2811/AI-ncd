@@ -19,6 +19,7 @@ import {
 import { Activity, ClipboardPlus, FileText, HeartPulse } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { Chatbot } from "@/components/Chatbot";
+import { ReportComparison } from "@/components/ReportComparison";
 import { api } from "@/lib/api";
 import { riskColor } from "@/lib/utils";
 
@@ -31,6 +32,7 @@ const RISK_PALETTE: Record<string, string> = {
 export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
+  const [comparison, setComparison] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,6 +43,8 @@ export default function DashboardPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+    // Report comparison is independent — failure here never blocks the dashboard.
+    api.compare().then(setComparison).catch(() => {});
   }, []);
 
   const trend = [...history]
@@ -100,6 +104,9 @@ export default function DashboardPage() {
             <SummaryCard icon={FileText} label="Assessments"
               value={`${profile?.total_predictions ?? history.length}`} />
           </div>
+
+          {/* Report comparison (renders only when 2+ assessments exist) */}
+          <ReportComparison data={comparison} />
 
           {/* Charts */}
           <div className="mt-6 grid gap-6 lg:grid-cols-2">

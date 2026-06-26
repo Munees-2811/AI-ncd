@@ -93,6 +93,8 @@ export const api = {
 
   history: () => request<any[]>("/api/history"),
 
+  compare: () => request<any>("/api/history/compare"),
+
   chatbot: (message: string) =>
     request<{ reply: string; disclaimer: string; suggestions: string[] }>("/api/chatbot", {
       method: "POST",

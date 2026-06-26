@@ -70,3 +70,28 @@ def test_chatbot(client, auth_token):
 def test_admin_requires_admin(client, auth_token):
     headers = {"Authorization": f"Bearer {auth_token}"}
     assert client.get("/api/admin/stats", headers=headers).status_code == 403
+
+
+def test_report_comparison(client, auth_token):
+    headers = {"Authorization": f"Bearer {auth_token}"}
+
+    # With <2 assessments, compare is unavailable (not an error).
+    first = client.get("/api/history/compare", headers=headers)
+    assert first.status_code == 200
+    assert "available" in first.json()
+
+    # Create two distinct assessments — second is healthier.
+    worse = {**SAMPLE, "blood_sugar": 180, "systolic_bp": 160, "cholesterol": 260}
+    better = {**SAMPLE, "blood_sugar": 95, "systolic_bp": 118, "cholesterol": 175,
+              "smoking": False, "exercise_freq": 5}
+    client.post("/api/predict", json=worse, headers=headers)
+    client.post("/api/predict", json=better, headers=headers)
+
+    cmp = client.get("/api/history/compare", headers=headers)
+    assert cmp.status_code == 200
+    data = cmp.json()
+    assert data["available"] is True
+    assert data["verdict"] in {"improved", "declined", "unchanged"}
+    assert any(m["key"] == "health_score" for m in data["metrics"])
+    # Each metric carries a direction-aware improvement flag.
+    assert all("better" in m for m in data["metrics"])
