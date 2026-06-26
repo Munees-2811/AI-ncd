@@ -64,7 +64,35 @@ def test_chatbot(client, auth_token):
     headers = {"Authorization": f"Bearer {auth_token}"}
     r = client.post("/api/chatbot", json={"message": "How can I lower my diabetes risk?"}, headers=headers)
     assert r.status_code == 200
-    assert "diabetes" in r.json()["reply"].lower() or len(r.json()["reply"]) > 0
+    assert "diabetes" in r.json()["reply"].lower()
+    assert r.json()["suggestions"]  # suggestion chips returned
+
+
+def test_chatbot_emergency_vs_prevention(client, auth_token):
+    headers = {"Authorization": f"Bearer {auth_token}"}
+
+    # A prevention/awareness question must NOT trigger the emergency notice.
+    prevent = client.post(
+        "/api/chatbot", json={"message": "How do I prevent a heart attack?"}, headers=headers
+    ).json()["reply"]
+    assert "emergency" not in prevent.lower()
+
+    # An active emergency MUST trigger it.
+    active = client.post(
+        "/api/chatbot", json={"message": "I'm having chest pain right now"}, headers=headers
+    ).json()["reply"]
+    assert "emergency" in active.lower()
+
+
+def test_chatbot_greeting_and_tamil(client, auth_token):
+    headers = {"Authorization": f"Bearer {auth_token}"}
+    greeting = client.post("/api/chatbot", json={"message": "hi"}, headers=headers).json()["reply"]
+    assert "health assistant" in greeting.lower()
+
+    tamil = client.post(
+        "/api/chatbot", json={"message": "வணக்கம்", "locale": "ta"}, headers=headers
+    ).json()
+    assert tamil["reply"]  # Tamil reply returned without error
 
 
 def test_admin_requires_admin(client, auth_token):

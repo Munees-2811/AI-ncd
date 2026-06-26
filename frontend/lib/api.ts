@@ -95,10 +95,10 @@ export const api = {
 
   compare: () => request<any>("/api/history/compare"),
 
-  chatbot: (message: string) =>
+  chatbot: (message: string, locale: "en" | "ta" = "en") =>
     request<{ reply: string; disclaimer: string; suggestions: string[] }>("/api/chatbot", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, locale }),
     }),
 
   reportUrl: (id: number) => `${BASE}/api/report/${id}`,

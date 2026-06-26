@@ -3,27 +3,35 @@
 import { MessageCircle, Send, X } from "lucide-react";
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 type Msg = { role: "user" | "bot"; text: string };
 
 export function Chatbot() {
+  const { locale } = useI18n();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([
+    "How can I lower my diabetes risk?",
+    "What foods are good for heart health?",
+    "Tips to manage stress",
+  ]);
   const [messages, setMessages] = useState<Msg[]>([
     { role: "bot", text: "Hi! I'm your health assistant. Ask me about lifestyle, nutrition, or NCD awareness. I never diagnose." },
   ]);
 
   const send = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || loading) return;
     setMessages((m) => [...m, { role: "user", text }]);
     setInput("");
     setLoading(true);
     try {
-      const res = await api.chatbot(text);
+      const res = await api.chatbot(text, locale);
       setMessages((m) => [...m, { role: "bot", text: res.reply }]);
+      if (res.suggestions?.length) setSuggestions(res.suggestions);
     } catch {
-      setMessages((m) => [...m, { role: "bot", text: "Sorry, I couldn't reach the assistant. Please log in and try again." }]);
+      setMessages((m) => [...m, { role: "bot", text: "Sorry, I couldn't reach the assistant. Please make sure you're logged in and try again." }]);
     } finally {
       setLoading(false);
     }
@@ -60,6 +68,20 @@ export function Chatbot() {
             ))}
             {loading && <div className="text-xs text-ink-400">typing…</div>}
           </div>
+          {!loading && suggestions.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {suggestions.slice(0, 3).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => send(s)}
+                  className="rounded-full border border-ink-200/70 bg-white/60 px-2.5 py-1 text-[11px] text-ink-600 transition hover:border-brand-300 hover:text-ink-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-ink-300 dark:hover:text-white"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
           <form
             onSubmit={(e) => { e.preventDefault(); send(input); }}
             className="mt-3 flex gap-2"

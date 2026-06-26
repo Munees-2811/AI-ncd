@@ -12,5 +12,5 @@ router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
 
 @router.post("", response_model=ChatResponse)
 def chat(payload: ChatMessage, user: User = Depends(get_current_user)):
-    result = get_reply(payload.message)
+    result = get_reply(payload.message, payload.locale)
     return ChatResponse(**result)
